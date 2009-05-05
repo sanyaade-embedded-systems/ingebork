@@ -6,7 +6,7 @@
  * events about window (dis-)appearance.  Only one X connection at a time is
  * allowed to select for this event mask.
  *
- * The event handlers of dwm are organized in an array which is accessed
+ * The event handlers of ingebork are organized in an array which is accessed
  * whenever a new event has been fetched. This allows event dispatching
  * in O(1) time.
  *
@@ -399,7 +399,7 @@ checkotherwm(void) {
 	XSelectInput(dpy, DefaultRootWindow(dpy), SubstructureRedirectMask);
 	XSync(dpy, False);
 	if(otherwm)
-		die("dwm: another window manager is already running\n");
+		die("ingebork: another window manager is already running\n");
 	XSetErrorHandler(xerror);
 	XSync(dpy, False);
 }
@@ -831,7 +831,7 @@ initfont(const char *fontstr) {
 	dc.font.set = XCreateFontSet(dpy, fontstr, &missing, &n, &def);
 	if(missing) {
 		while(n--)
-			fprintf(stderr, "dwm: missing fontset: %s\n", missing[n]);
+			fprintf(stderr, "ingebork: missing fontset: %s\n", missing[n]);
 		XFreeStringList(missing);
 	}
 	if(dc.font.set) {
@@ -1355,7 +1355,7 @@ spawn(const Arg *arg) {
 			close(ConnectionNumber(dpy));
 		setsid();
 		execvp(((char **)arg->v)[0], (char **)arg->v);
-		fprintf(stderr, "dwm: execvp %s", ((char **)arg->v)[0]);
+		fprintf(stderr, "ingebork: execvp %s", ((char **)arg->v)[0]);
 		perror(" failed");
 		exit(0);
 	}
@@ -1604,7 +1604,7 @@ updatetitle(Client *c) {
 void
 updatestatus() {
 	if(!gettextprop(root, XA_WM_NAME, stext, sizeof(stext)))
-		strcpy(stext, "dwm-"VERSION);
+		strcpy(stext, "ingebork-"VERSION);
 	drawbar();
 }
 
@@ -1649,7 +1649,7 @@ xerror(Display *dpy, XErrorEvent *ee) {
 	|| (ee->request_code == X_GrabKey && ee->error_code == BadAccess)
 	|| (ee->request_code == X_CopyArea && ee->error_code == BadDrawable))
 		return 0;
-	fprintf(stderr, "dwm: fatal error: request code=%d, error code=%d\n",
+	fprintf(stderr, "ingebork: fatal error: request code=%d, error code=%d\n",
 			ee->request_code, ee->error_code);
 	return xerrorxlib(dpy, ee); /* may call exit */
 }
@@ -1685,15 +1685,15 @@ zoom(const Arg *arg) {
 int
 main(int argc, char *argv[]) {
 	if(argc == 2 && !strcmp("-v", argv[1]))
-		die("dwm-"VERSION", © 2006-2009 dwm engineers, see LICENSE for details\n");
+		die("ingebork-"VERSION", © 2009 Henrik Friedrichsen, © 2006-2009 dwm engineers, see LICENSE for details\n");
 	else if(argc != 1)
-		die("usage: dwm [-v]\n");
+		die("usage: ingebork [-v]\n");
 
 	if(!setlocale(LC_CTYPE, "") || !XSupportsLocale())
 		fputs("warning: no locale support\n", stderr);
 
 	if(!(dpy = XOpenDisplay(NULL)))
-		die("dwm: cannot open display\n");
+		die("ingebork: cannot open display\n");
 
 	checkotherwm();
 	setup();
