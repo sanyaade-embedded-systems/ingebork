@@ -1,30 +1,32 @@
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
-static const char font[]            = "-*-terminus-medium-r-normal-*-14-*-*-*-*-*-*-*";
-static const char normbordercolor[] = "#cccccc";
-static const char normbgcolor[]     = "#cccccc";
-static const char normfgcolor[]     = "#000000";
-static const char selbordercolor[]  = "#0066ff";
-static const char selbgcolor[]      = "#0066ff";
+static const char font[]            = "-*-nu-*-*-*-*-*-*-*-*-*-*-*-*";
+static const char normbordercolor[] = "#211505";
+static const char normbgcolor[]     = "#211505";
+static const char normfgcolor[]     = "#ccb68d";
+static const char selbordercolor[]  = "#442b0a";
+static const char selbgcolor[]      = "#211505";
 static const char selfgcolor[]      = "#ffffff";
 static unsigned int borderpx        = 1;        /* border pixel of windows */
-static unsigned int snap            = 32;       /* snap pixel */
+static unsigned int snap            = 16;       /* snap pixel */
 static Bool showbar                 = True;     /* False means no bar */
 static Bool topbar                  = True;     /* False means bottom bar */
 
 /* tagging */
-static const char tags[][MAXTAGLEN] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+static const char tags[][MAXTAGLEN] = { "comm", "www", "dev", "im", "scrap" };
 static unsigned int tagset[] = {1, 1}; /* after start, first tag is selected */
 
 static Rule rules[] = {
 	/* class      instance    title       tags mask     isfloating */
-	{ "Gimp",     NULL,       NULL,       0,            True },
-	{ "Firefox",  NULL,       NULL,       1 << 8,       True },
+	{ "Gimp",     NULL,       NULL,       1 << 4,       True },
+	{ "Firefox",  NULL,       NULL,       1 << 1,       False },
+	{ "Pidgin",   NULL,	  NULL,	      1 << 3,	    False },
+	{ "MPlayer",  NULL,	  NULL,	      0,	    True }
 };
 
 /* layout(s) */
-static float mfact      = 0.55; /* factor of master area size [0.05..0.95] */
+static float mfact      = 0.5; /* factor of master area size [0.05..0.95] */
 static Bool resizehints = True; /* False means respect size hints in tiled resizals */
 
 static Layout layouts[] = {
@@ -35,7 +37,7 @@ static Layout layouts[] = {
 };
 
 /* key definitions */
-#define MODKEY Mod1Mask
+#define MODKEY Mod4Mask
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
@@ -46,13 +48,15 @@ static Layout layouts[] = {
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 /* commands */
-static const char *dmenucmd[] = { "dmenu_run", "-fn", font, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
-static const char *termcmd[]  = { "uxterm", NULL };
+static const char *wwwcmd[] = { "firefox3", NULL };
+static const char *termcmd[] = { "urxvtc", NULL };
+static const char *imcmd[] = { "pidgin", NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
-	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
-	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
+	{ MODKEY,                       XK_w,      spawn,          {.v = wwwcmd } },
+	{ MODKEY,	       		XK_e,	   spawn,          {.v = termcmd } },
+	{ MODKEY,			XK_q,	   spawn,	   {.v = imcmd } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
