@@ -20,10 +20,6 @@ options:
 
 ${OBJ}: config.h config.mk
 
-config.h:
-	@echo creating $@ from config.def.h
-	@cp config.def.h $@
-
 ingebork: ${OBJ}
 	@echo CC -o $@
 	@${CC} -o $@ ${OBJ} ${LDFLAGS}
@@ -35,7 +31,7 @@ clean:
 dist: clean
 	@echo creating dist tarball
 	@mkdir -p ingebork-${VERSION}
-	@cp -R LICENSE Makefile README config.def.h config.mk \
+	@cp -R LICENSE Makefile README config.h config.mk \
 		ingebork.1 ${SRC} ingebork-${VERSION}
 	@tar -cf ingebork-${VERSION}.tar ingebork-${VERSION}
 	@gzip ingebork-${VERSION}.tar
