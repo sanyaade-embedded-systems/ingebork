@@ -46,6 +46,12 @@ like this in your .xinitrc:
     done &
     exec ingebork
 
+If you want to colorize text, you can use HTML colors.
+They need to be embedded in ampersands (&).
+
+Example:
+"&#ffffff& This is white. &#000000& This is black.
+
 
 Configuration
 -------------
