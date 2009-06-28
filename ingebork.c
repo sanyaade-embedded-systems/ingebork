@@ -146,6 +146,7 @@ static void detach(Client *c);
 static void detachstack(Client *c);
 static void die(const char *errstr, ...);
 static void drawbar(void);
+static void drawcolortext(const char *text, const char *stripped, unsigned long col[ColLast]);
 static void drawsquare(Bool filled, Bool empty, Bool invert, unsigned long col[ColLast]);
 static void drawtext(const char *text, unsigned long col[ColLast], Bool invert);
 static void enternotify(XEvent *e);
@@ -583,7 +584,33 @@ die(const char *errstr, ...) {
 }
 
 void
+stripcolortags(const char *text, char* out)
+{
+	unsigned int i, io = 0, len = strlen(text);
+	unsigned char skip = 0;
+
+	for(i = 0; i < len; i++) {
+		if(text[i] == '&' && !skip) {
+			skip = 1;
+			continue;
+		}
+		else if(text[i] == '&' && skip) {
+			skip = 0;
+			continue;
+		}
+
+		if(!skip) {
+			out[io] = text[i];
+			io++;
+		}
+	}
+}
+
+void
 drawbar(void) {
+	gettextprop(root, XA_WM_NAME, stext, sizeof(stext)); // TODO: fix this
+	char buf[256];
+	memset(buf, 0, sizeof(buf));
 	int x;
 	unsigned int i, occ = 0, urg = 0;
 	unsigned long *col;
@@ -610,13 +637,16 @@ drawbar(void) {
 	}
 	else
 		x = dc.x;
-	dc.w = TEXTW(stext);
+
+	stripcolortags(stext, buf);
+	dc.w = TEXTW(buf);
 	dc.x = ww - dc.w;
 	if(dc.x < x) {
 		dc.x = x;
 		dc.w = ww - x;
 	}
-	drawtext(stext, dc.norm, False);
+	drawcolortext(stext, buf, dc.norm);
+
 	if((dc.w = dc.x - x) > bh) {
 		dc.x = x;
 		if(sel) {
@@ -628,6 +658,40 @@ drawbar(void) {
 	}
 	XCopyArea(dpy, dc.drawable, barwin, dc.gc, 0, 0, ww, bh, 0, 0);
 	XSync(dpy, False);
+}
+
+void
+drawcolortext(const char *text, const char *stripped, unsigned long col[ColLast])
+{
+	int x, y, h, len;
+	XRectangle r = { dc.x, dc.y, dc.w, dc.h };
+
+	XSetForeground(dpy, dc.gc, col[ColBG]);
+	XFillRectangles(dpy, dc.drawable, dc.gc, &r, 1);
+	if(!text)
+		return;
+
+	h = dc.font.ascent + dc.font.descent;
+	y = dc.y + (dc.h / 2) - (h / 2) + dc.font.ascent;
+	x = dc.x + (h / 2);
+
+	XSetForeground(dpy, dc.gc, col[ColFG]);
+	char *sep = "&", *word = 0, *brkt = 0;
+
+	for(word = strtok_r((char*)text, sep, &brkt); word; word = strtok_r(NULL, sep, &brkt)) {
+		if(word[0] == '#') {
+			XSetForeground(dpy, dc.gc, getcolor(word));
+			continue;
+		}
+		len = strlen(word);
+
+		if(dc.font.set)
+			XmbDrawString(dpy, dc.drawable, dc.font.set, dc.gc, x, y, word, len);
+		else
+			XDrawString(dpy, dc.drawable, dc.gc, x, y, word, len);
+
+		x += textnw(word, strlen(word));
+	}
 }
 
 void
