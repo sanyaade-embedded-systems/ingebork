@@ -1,5 +1,8 @@
 /* See LICENSE file for copyright and license details. */
 
+/* color tag delimiter */
+#define COLORTAG '&'
+
 /* appearance */
 static const char font[]            = "-*-nu-*-*-*-*-*-*-*-*-*-*-*-*";
 static const char normbordercolor[] = "#1c2105";

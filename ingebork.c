@@ -590,11 +590,11 @@ stripcolortags(const char *text, char* out)
 	unsigned char skip = 0;
 
 	for(i = 0; i < len; i++) {
-		if(text[i] == '&' && !skip) {
+		if(text[i] == COLORTAG && !skip) {
 			skip = 1;
 			continue;
 		}
-		else if(text[i] == '&' && skip) {
+		else if(text[i] == COLORTAG && skip) {
 			skip = 0;
 			continue;
 		}
@@ -676,10 +676,10 @@ drawcolortext(const char *text, const char *stripped, unsigned long col[ColLast]
 	x = dc.x + (h / 2);
 
 	XSetForeground(dpy, dc.gc, col[ColFG]);
-	char *sep = "&", *word = 0, *brkt = 0;
+	char sep[2] = { COLORTAG, '\0'}, *word = 0, *brkt = 0;
 
 	for(word = strtok_r((char*)text, sep, &brkt); word; word = strtok_r(NULL, sep, &brkt)) {
-		if(word[0] == '#') {
+		if(word[0] == COLORTAG) {
 			XSetForeground(dpy, dc.gc, getcolor(word));
 			continue;
 		}
