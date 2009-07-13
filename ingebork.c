@@ -676,10 +676,10 @@ drawcolortext(const char *text, const char *stripped, unsigned long col[ColLast]
 	x = dc.x + (h / 2);
 
 	XSetForeground(dpy, dc.gc, col[ColFG]);
-	char sep[2] = { COLORTAG, '\0'}, *word = 0, *brkt = 0;
+	char sep[] = { COLORTAG, '\0' }, *word = 0, *brkt = 0;
 
 	for(word = strtok_r((char*)text, sep, &brkt); word; word = strtok_r(NULL, sep, &brkt)) {
-		if(word[0] == COLORTAG) {
+		if(word[0] == '#') {
 			XSetForeground(dpy, dc.gc, getcolor(word));
 			continue;
 		}
