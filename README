@@ -47,10 +47,10 @@ like this in your .xinitrc:
     exec ingebork
 
 If you want to colorize text, you can use HTML colors.
-The default delimiter is '&', you can change it in the config file.
+The default delimiter is '|', you can change it in the config file.
 
 Example:
-"&#ffffff& This is white. &#000000& This is black.
+"|#ffffff| This is white. |#000000| This is black."
 
 
 Configuration

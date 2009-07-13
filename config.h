@@ -1,7 +1,7 @@
 /* See LICENSE file for copyright and license details. */
 
 /* color tag delimiter */
-#define COLORTAG '&'
+#define COLORTAG '|'
 
 /* appearance */
 static const char font[]            = "-*-nu-*-*-*-*-*-*-*-*-*-*-*-*";
